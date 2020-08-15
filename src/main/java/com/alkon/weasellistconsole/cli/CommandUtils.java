@@ -40,6 +40,7 @@ public class CommandUtils {
         commands.add(new Remove());
         commands.add(new Edit());
         commands.add(new Move());
+        commands.add(new Mongo());
 
         return commands;
     }
