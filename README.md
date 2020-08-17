@@ -8,6 +8,20 @@ When running this application it will search in **C:\weasellist** for a **weasel
 If no file found it will create a new one, ask for some connection parameters and write them as a uri in the created file.
 > The result should be something like this: ***mongodb://localhost:27017/weaseldb***
 
+### What is WeaselList?
+
+Given that there are so many online services for different multimedia content we may want to list the content we have to see, play, read ... as well as that we have already seen, played ... And more listings at will. 
+
+The problem with this is that each platform has its own lists for its content, but none of them includes the rest and we end up having lists everywhere.
+
+WeaselList is a project that aims to offer the possibility to create and personalize your lists in a single platform along with extra functionalities.
+
+### So, what is WeaselList Console?
+
+WeaselList is planed to be a web application and it's development is currently on-hold, the first version is almost completed but the front-end is not fully developed.
+
+WeaselList Console is a lighter version on WeaselList, with only the main (CRUD) functionalities and it's executed as a CMD, not as user-friendly as a web page. It is also easier to develop so it can be used while the main project is a WIP.
+
 ### Available commands:
 
 - Exit -> Exits the application.
