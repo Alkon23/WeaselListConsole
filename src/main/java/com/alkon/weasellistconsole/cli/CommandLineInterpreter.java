@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.alkon.weasellistconsole.application.Utils.isEmpty;
 import static com.alkon.weasellistconsole.application.Utils.listToString;
 import static com.alkon.weasellistconsole.cli.CommandUtils.*;
 import static com.alkon.weasellistconsole.cli.Constants.*;
@@ -71,7 +72,11 @@ public class CommandLineInterpreter {
     }
 
     public boolean readBoolean(String message) {
-        return this.read(message, false).toLowerCase().charAt(0) == YES;
+        final String in = this.read(message, false);
+        if (isEmpty(in)) {
+            return false;
+        }
+        return in.toLowerCase().charAt(0) == YES;
     }
 
 
