@@ -18,17 +18,17 @@ public class Add extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
 
         switch (input.toLowerCase()) {
             case "list":
-                addList(context);
+                addList();
                 break;
             case "item":
-                addItem(context);
+                addItem();
                 break;
             case "tag":
-                addTag(context);
+                addTag();
                 break;
             default:
                 getCli().println(getMessage(MISSING_ARGUMENTS, "add"));
@@ -38,13 +38,13 @@ public class Add extends Command {
         return ReturnCode.CONTINUE;
     }
 
-    private void updateUser(final ApplicationContext context, User user) {
-        user = ((MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        context.setParam(ApplicationContext.USER, user);
+    private void updateUser(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
     }
 
-    private void addTag(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void addTag() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         cli.println(getMessage(FILL_INFO, TAG));
@@ -72,7 +72,7 @@ public class Add extends Command {
             }
         } while (addOther);
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
     private void addTagsToObject(final User user, Taggable obj) {
@@ -121,8 +121,8 @@ public class Add extends Command {
         } while (addOther);
     }
 
-    private void addItem(final ApplicationContext context) {
-        User user = (User) context.getParam(ApplicationContext.USER);
+    private void addItem() {
+        User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         ItemList list;
@@ -137,11 +137,11 @@ public class Add extends Command {
         cli.println(getMessage(FILL_INFO, ITEM));
         this.addItemToList(user, list);
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
-    private void addList(final ApplicationContext context) {
-        User user = (User) context.getParam(ApplicationContext.USER);
+    private void addList() {
+        User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         cli.println(getMessage(FILL_INFO, LIST));
@@ -171,7 +171,7 @@ public class Add extends Command {
         }
 
         user.getItemLists().add(list);
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
 }

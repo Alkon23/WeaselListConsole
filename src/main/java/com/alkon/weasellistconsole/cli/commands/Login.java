@@ -1,11 +1,16 @@
 package com.alkon.weasellistconsole.cli.commands;
 
 import com.alkon.weasellistconsole.application.ApplicationContext;
+import com.alkon.weasellistconsole.application.PropertyFile;
 import com.alkon.weasellistconsole.application.model.User;
 import com.alkon.weasellistconsole.application.repo.MongoWrapper;
 import com.alkon.weasellistconsole.cli.CommandLineInterpreter;
 import com.alkon.weasellistconsole.cli.ReturnCode;
 
+import java.io.IOException;
+
+import static com.alkon.weasellistconsole.application.PropertyFile.CACHED_PASS;
+import static com.alkon.weasellistconsole.application.PropertyFile.CACHED_USER;
 import static com.alkon.weasellistconsole.cli.Constants.*;
 
 /**
@@ -19,19 +24,20 @@ public class Login extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
-        final MongoWrapper mongoWrapper = (MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER);
+    public ReturnCode execute(final String input) {
+        final MongoWrapper mongoWrapper = (MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER);
         final CommandLineInterpreter cli = getCli();
 
         User user;
+        String username, password;
         boolean retry;
         int triesLeft = 3;
         do {
             retry = false;
 
             cli.printSpace();
-            final String username = cli.read(ENTER_USERNAME);
-            final String password = cli.read(ENTER_PASSWORD);
+            username = cli.read(ENTER_USERNAME);
+            password = cli.read(ENTER_PASSWORD);
 
             user = mongoWrapper.getUser(username, password);
 
@@ -42,14 +48,23 @@ public class Login extends Command {
                     triesLeft--;
                 }
             }
-
         } while (retry);
 
         if (user == null) {
             return ReturnCode.EXIT; // Return EXIT instead of ERROR because error was previously displayed
         }
 
-        context.setParam(ApplicationContext.USER, user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
+        if (cli.readBoolean(STORE_USER)) {
+            try {
+                PropertyFile.writeProperty(CACHED_USER, username);
+                PropertyFile.writeProperty(CACHED_PASS, password);
+            } catch (IOException e) {
+                ApplicationContext.setParam(EXIT_ERROR, e.getMessage());
+                return ReturnCode.ERROR;
+            }
+        }
+
         return ReturnCode.CONTINUE;
     }
 

@@ -35,10 +35,9 @@ public class CommandLineInterpreter {
     /**
      * Reads a command entered by the user and executes it
      *
-     * @param context Application Context
      * @return The {@link ReturnCode} returned by the command execution. If there is any unexpected error in the execution, a {@link ReturnCode#ERROR} is returned
      */
-    public ReturnCode readCommand(final ApplicationContext context) {
+    public ReturnCode readCommand() {
         try {
             final String[] input = this.read().split(" ");
 
@@ -54,7 +53,7 @@ public class CommandLineInterpreter {
                 inputText = listToString(Arrays.asList(input).subList(1, input.length), " ");
             }
 
-            return command.execute(inputText, context);
+            return command.execute(inputText);
         } catch (Exception e) {
             this.println(getMessage(UNEXPECTED_ERROR));
             e.printStackTrace();

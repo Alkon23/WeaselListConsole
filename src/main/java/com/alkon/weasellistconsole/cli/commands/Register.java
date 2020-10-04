@@ -19,8 +19,8 @@ public class Register extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
-        final MongoWrapper mongoWrapper = (MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER);
+    public ReturnCode execute(final String input) {
+        final MongoWrapper mongoWrapper = (MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER);
         final CommandLineInterpreter cli = getCli();
 
         cli.println(getMessage(FILL_INFO, USER));
@@ -66,7 +66,7 @@ public class Register extends Command {
         }
 
         user = mongoWrapper.registerUser(user);
-        context.setParam(ApplicationContext.USER, user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
         return ReturnCode.CONTINUE;
     }
 

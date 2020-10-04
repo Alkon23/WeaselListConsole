@@ -23,8 +23,8 @@ public class View extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    public ReturnCode execute(final String input) {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
 
         if (isEmpty(input)) {
             this.printLists(user.getItemLists());

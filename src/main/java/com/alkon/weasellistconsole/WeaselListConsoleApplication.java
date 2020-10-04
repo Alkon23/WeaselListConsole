@@ -15,7 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.alkon.weasellistconsole.application.ApplicationContext.USER;
+import static com.alkon.weasellistconsole.application.PropertyFile.CACHED_PASS;
+import static com.alkon.weasellistconsole.application.PropertyFile.CACHED_USER;
 import static com.alkon.weasellistconsole.cli.Constants.*;
+import static com.alkon.weasellistconsole.cli.ReturnCode.CONTINUE;
 
 @SpringBootApplication
 public class WeaselListConsoleApplication implements CommandLineRunner {
@@ -29,35 +32,38 @@ public class WeaselListConsoleApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        final ApplicationContext applicationContext = new ApplicationContext();
-        applicationContext.setParam(ApplicationContext.MONGO_WRAPPER, this.wrapper);
+        ApplicationContext.setParam(ApplicationContext.MONGO_WRAPPER, this.wrapper);
         final CommandLineInterpreter interpreter = CommandLineInterpreter.getInstance();
 
         // Logs the user into the application
-        ReturnCode status = this.loginOrRegister(interpreter, applicationContext);
+        ReturnCode status = this.loginOrRegister(interpreter);
 
-        if (status == ReturnCode.CONTINUE) {
+        if (status == CONTINUE) {
             interpreter.printSpace();
-            interpreter.println(getMessage(WELCOME, ((User) applicationContext.getParam(USER)).getNick()));
+            interpreter.println(getMessage(WELCOME, ((User) ApplicationContext.getParam(USER)).getNick()));
         }
 
-        while (status == ReturnCode.CONTINUE) {
-            status = interpreter.readCommand(applicationContext);
+        while (status == CONTINUE) {
+            status = interpreter.readCommand();
         }
 
         if (status == ReturnCode.ERROR) {
             interpreter.printSpace();
-            if (applicationContext.hasParam(ApplicationContext.EXIT_ERROR)) {
-                interpreter.println(getMessage(EXIT_ERROR, applicationContext.getParam(ApplicationContext.EXIT_ERROR)));
+            if (ApplicationContext.hasParam(ApplicationContext.EXIT_ERROR)) {
+                interpreter.println(getMessage(EXIT_ERROR, ApplicationContext.getParam(ApplicationContext.EXIT_ERROR)));
             } else {
                 interpreter.println(EXIT_UNEXPECTED_ERROR);
             }
         }
     }
 
-    private ReturnCode loginOrRegister(final CommandLineInterpreter cli, final ApplicationContext context) {
+    private ReturnCode loginOrRegister(final CommandLineInterpreter cli) {
         ReturnCode status = ReturnCode.ERROR;
         String option;
+
+        if (checkCachedUser()) {
+            return ReturnCode.CONTINUE;
+        }
 
         do {
             option = cli.read(LOGIN_REGISTER).toLowerCase();
@@ -65,11 +71,11 @@ public class WeaselListConsoleApplication implements CommandLineRunner {
             switch (option) {
                 case "login":
                     status = CommandUtils.getCommand(cli.getExistingCommands(), "login")
-                            .execute(null, context);
+                            .execute(null);
                     break;
                 case "register":
                     status = CommandUtils.getCommand(cli.getExistingCommands(), "register")
-                            .execute(null, context);
+                            .execute(null);
                     if (status == ReturnCode.EXIT) {
                         option = null;
                     }
@@ -84,6 +90,23 @@ public class WeaselListConsoleApplication implements CommandLineRunner {
         } while (option == null);
 
         return status;
+    }
+
+    private boolean checkCachedUser() {
+        final MongoWrapper mongoWrapper = (MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER);
+        final String username = (String) ApplicationContext.getParam(CACHED_USER);
+        final String pass = (String) ApplicationContext.getParam(CACHED_PASS);
+        if (username == null || pass == null) {
+            return false;
+        }
+
+        User user = mongoWrapper.getUser(username, pass);
+        if (user == null) {
+            return false;
+        }
+
+        ApplicationContext.setParam(ApplicationContext.USER, user);
+        return true;
     }
 
     @Bean

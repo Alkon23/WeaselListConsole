@@ -34,6 +34,7 @@ public class CommandUtils {
         commands.add(new Exit());
         commands.add(new Help());
         commands.add(new Login());
+        commands.add(new Logout());
         commands.add(new Register());
         commands.add(new View());
         commands.add(new Add());

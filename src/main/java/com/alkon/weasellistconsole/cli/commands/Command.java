@@ -1,6 +1,5 @@
 package com.alkon.weasellistconsole.cli.commands;
 
-import com.alkon.weasellistconsole.application.ApplicationContext;
 import com.alkon.weasellistconsole.application.repo.MongoWrapper;
 import com.alkon.weasellistconsole.cli.CommandLineInterpreter;
 import com.alkon.weasellistconsole.cli.ReturnCode;
@@ -26,6 +25,6 @@ public abstract class Command {
      * Executes the command
      * @return A valid ReturnCode depending on the execution result
      */
-    public abstract ReturnCode execute(final String input, final ApplicationContext context);
+    public abstract ReturnCode execute(final String input);
 
 }

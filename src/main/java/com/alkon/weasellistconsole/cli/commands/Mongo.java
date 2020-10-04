@@ -1,13 +1,13 @@
 package com.alkon.weasellistconsole.cli.commands;
 
 import com.alkon.weasellistconsole.application.ApplicationContext;
+import com.alkon.weasellistconsole.application.PropertyFile;
 import com.alkon.weasellistconsole.cli.CommandLineInterpreter;
 import com.alkon.weasellistconsole.cli.ReturnCode;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
+import static com.alkon.weasellistconsole.application.PropertyFile.MONGO_URL;
 import static com.alkon.weasellistconsole.application.Utils.isEmpty;
 import static com.alkon.weasellistconsole.cli.Constants.*;
 
@@ -22,17 +22,16 @@ public class Mongo extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
         try {
             CommandLineInterpreter cli = getCli();
-            File properties = new File(PROPERTIES_FILE);
 
             boolean correct;
-            String userIn;
-            String uri = "mongodb://";
+            String userIn, uri;
 
             cli.println(PROPERTIES_NOT_FOUND);
             do {
+                uri = "mongodb://";
                 cli.println(ENTER_VALUES);
 
                 userIn = cli.read(ENTER_HOST);
@@ -48,12 +47,9 @@ public class Mongo extends Command {
                 correct = cli.readBoolean(IS_CORRECT);
             } while (!correct);
 
-            FileWriter fw = new FileWriter(properties);
-            fw.write(uri);
-            fw.flush();
-            fw.close();
+            PropertyFile.writeProperty(MONGO_URL, uri);
         } catch (IOException e) {
-            context.setParam(EXIT_ERROR, e.getMessage());
+            ApplicationContext.setParam(EXIT_ERROR, e.getMessage());
             return ReturnCode.ERROR;
         }
 

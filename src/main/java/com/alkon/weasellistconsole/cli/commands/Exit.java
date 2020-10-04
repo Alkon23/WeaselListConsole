@@ -14,7 +14,7 @@ public class Exit extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
         return ReturnCode.EXIT;
     }
 

@@ -21,20 +21,20 @@ public class Edit extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
 
         switch (input.toLowerCase()) {
             case "list":
-                editList(context);
+                editList();
                 break;
             case "item":
-                editItem(context);
+                editItem();
                 break;
             case "tag":
-                editTag(context);
+                editTag();
                 break;
             case "user":
-                editUser(context);
+                editUser();
                 break;
             default:
                 getCli().println(getMessage(MISSING_ARGUMENTS, "edit"));
@@ -44,19 +44,19 @@ public class Edit extends Command {
         return ReturnCode.CONTINUE;
     }
 
-    private void updateUser(final ApplicationContext context, User user) {
-        user = ((MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        context.setParam(ApplicationContext.USER, user);
+    private void updateUser(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
     }
 
-    private void updateUserAndPass(final ApplicationContext context, User user) {
-        user = ((MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER)).saveUserAndPass(user);
-        context.setParam(ApplicationContext.USER, user);
+    private void updateUserAndPass(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUserAndPass(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
     }
 
-    private void editUser(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
-        final MongoWrapper mongoWrapper = (MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER);
+    private void editUser() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
+        final MongoWrapper mongoWrapper = (MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER);
         final CommandLineInterpreter cli = getCli();
 
         boolean updatePassword = false;
@@ -96,14 +96,14 @@ public class Edit extends Command {
         }
 
         if (updatePassword) {
-            this.updateUserAndPass(context, user);
+            this.updateUserAndPass(user);
         } else {
-            this.updateUser(context, user);
+            this.updateUser(user);
         }
     }
 
-    private void editTag(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void editTag() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         final String tagName = cli.read(getMessage(WHICH_EDIT, TAG));
@@ -140,11 +140,11 @@ public class Edit extends Command {
             }
         }
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
-    private void editItem(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void editItem() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         final String itemName = cli.read(getMessage(WHICH_EDIT, ITEM));
@@ -199,11 +199,11 @@ public class Edit extends Command {
 
         this.editTagsFromTaggable(user, item);
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
-    private void editList(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void editList() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         final String listName = cli.read(getMessage(WHICH_EDIT, LIST));
@@ -229,7 +229,7 @@ public class Edit extends Command {
 
         this.editTagsFromTaggable(user, list);
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
     private void editTagsFromTaggable(final User user, final Taggable taggable) {

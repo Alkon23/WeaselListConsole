@@ -21,16 +21,16 @@ public class Remove extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
         switch (input.toLowerCase()) {
             case "list":
-                this.removeList(context);
+                this.removeList();
                 break;
             case "item":
-                this.removeItem(context);
+                this.removeItem();
                 break;
             case "tag":
-                this.removeTag(context);
+                this.removeTag();
                 break;
             default:
                 this.getCli().println(getMessage(MISSING_ARGUMENTS, "remove"));
@@ -40,8 +40,8 @@ public class Remove extends Command {
         return ReturnCode.CONTINUE;
     }
 
-    private void removeList(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void removeList() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         String input = cli.read(LIST + " " + ENTER_NAME);
@@ -53,13 +53,13 @@ public class Remove extends Command {
 
         if (cli.readBoolean(getMessage(CONFIRM_DELETION, LIST, input))) {
             user.getItemLists().remove(list);
-            this.updateUser(context, user);
+            this.updateUser(user);
             cli.println(getMessage(OPERATION_SUCCESSFUL, LIST, DELETED));
         }
     }
 
-    private void removeItem(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void removeItem() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         String listName = cli.read(getMessage(WHICH_LIST_DELETE, ITEM));
@@ -78,13 +78,13 @@ public class Remove extends Command {
         if (cli.readBoolean(getMessage(CONFIRM_DELETION, ITEM, input))) {
             list.getItems().remove(list.getItem(input));
             user.setItemList(list);
-            this.updateUser(context, user);
+            this.updateUser(user);
             cli.println(getMessage(OPERATION_SUCCESSFUL, LIST, DELETED));
         }
     }
 
-    private void removeTag(final ApplicationContext context) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+    private void removeTag() {
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         Tag tag = readTag(user);
@@ -102,7 +102,7 @@ public class Remove extends Command {
                 if (cli.readBoolean(getMessage(CONFIRM_DELETION, TAG, tagName))) {
                     list.removeTag(tagName);
                     user.setItemList(list);
-                    this.updateUser(context, user);
+                    this.updateUser(user);
                     cli.println(getMessage(OPERATION_SUCCESSFUL, TAG, DELETED));
                 }
                 break;
@@ -123,7 +123,7 @@ public class Remove extends Command {
                     item.removeTag(tagName);
                     list.setItem(item);
                     user.setItemList(list);
-                    this.updateUser(context, user);
+                    this.updateUser(user);
                     cli.println(getMessage(OPERATION_SUCCESSFUL, TAG, DELETED));
                 }
                 break;
@@ -140,7 +140,7 @@ public class Remove extends Command {
                             }
                         }
                     }
-                    this.updateUser(context, user);
+                    this.updateUser(user);
                     cli.println(getMessage(OPERATION_SUCCESSFUL, TAG, DELETED));
                 }
                 break;
@@ -161,9 +161,9 @@ public class Remove extends Command {
         return tag;
     }
 
-    private void updateUser(final ApplicationContext context, User user) {
-        user = ((MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        context.setParam(ApplicationContext.USER, user);
+    private void updateUser(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
     }
 
 }

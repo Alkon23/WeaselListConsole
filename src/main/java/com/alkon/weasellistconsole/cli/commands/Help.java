@@ -20,7 +20,7 @@ public class Help extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
 
         if (input != null && !input.isEmpty()) {
             this.printSingle(input);

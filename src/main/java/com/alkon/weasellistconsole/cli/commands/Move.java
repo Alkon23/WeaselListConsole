@@ -19,7 +19,7 @@ public class Move extends Command {
     }
 
     @Override
-    public ReturnCode execute(final String input, final ApplicationContext context) {
+    public ReturnCode execute(final String input) {
         final CommandLineInterpreter cli = getCli();
         final String[] args = isEmpty(input) ? new String[0] : input.split(" ");
         String item, from, to;
@@ -47,19 +47,19 @@ public class Move extends Command {
                 break;
         }
 
-        this.move(context, item, from, to);
+        this.move(item, from, to);
 
         return ReturnCode.CONTINUE;
     }
 
-    private void updateUser(final ApplicationContext context, User user) {
-        user = ((MongoWrapper) context.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        context.setParam(ApplicationContext.USER, user);
+    private void updateUser(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
     }
 
-    private void move(final ApplicationContext context, final String itemName,
+    private void move(final String itemName,
                       final String sourceListName, final String targetListName) {
-        final User user = (User) context.getParam(ApplicationContext.USER);
+        final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
         final CommandLineInterpreter cli = getCli();
 
         ItemList targetList = user.getItemList(targetListName);
@@ -81,7 +81,7 @@ public class Move extends Command {
         sourceList.getItems().remove(item);
         cli.println(getMessage(OPERATION_SUCCESSFUL, ITEM, MOVED));
 
-        this.updateUser(context, user);
+        this.updateUser(user);
     }
 
 }
