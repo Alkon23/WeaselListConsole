@@ -19,6 +19,7 @@ public class ItemList implements Taggable {
     private String name;
     private List<Item> items;
     private String tags;
+    private boolean archived;
 
     public ItemList() {
         this.items = new ArrayList<>();

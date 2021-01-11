@@ -44,11 +44,6 @@ public class Edit extends Command {
         return ReturnCode.CONTINUE;
     }
 
-    private void updateUser(User user) {
-        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        ApplicationContext.setParam(ApplicationContext.USER, user);
-    }
-
     private void updateUserAndPass(User user) {
         user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUserAndPass(user);
         ApplicationContext.setParam(ApplicationContext.USER, user);

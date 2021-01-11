@@ -161,9 +161,4 @@ public class Remove extends Command {
         return tag;
     }
 
-    private void updateUser(User user) {
-        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        ApplicationContext.setParam(ApplicationContext.USER, user);
-    }
-
 }

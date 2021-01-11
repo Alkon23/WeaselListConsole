@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -34,6 +35,10 @@ public class User {
             }
         }
         return null;
+    }
+
+    public List<ItemList> getFilteredItemLists(final boolean archived) {
+        return this.itemLists.stream().filter(list -> list.isArchived() == archived).collect(Collectors.toList());
     }
 
     public void setItemList(final ItemList list) {

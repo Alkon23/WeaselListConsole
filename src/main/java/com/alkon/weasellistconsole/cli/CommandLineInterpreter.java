@@ -1,6 +1,5 @@
 package com.alkon.weasellistconsole.cli;
 
-import com.alkon.weasellistconsole.application.ApplicationContext;
 import com.alkon.weasellistconsole.cli.commands.Command;
 import lombok.Getter;
 
@@ -10,7 +9,7 @@ import java.util.Scanner;
 
 import static com.alkon.weasellistconsole.application.Utils.isEmpty;
 import static com.alkon.weasellistconsole.application.Utils.listToString;
-import static com.alkon.weasellistconsole.cli.CommandUtils.*;
+import static com.alkon.weasellistconsole.cli.CommandLoader.*;
 import static com.alkon.weasellistconsole.cli.Constants.*;
 
 public class CommandLineInterpreter {
@@ -27,7 +26,7 @@ public class CommandLineInterpreter {
     public static CommandLineInterpreter getInstance() {
         if (instance == null) {
             instance = new CommandLineInterpreter();
-            instance.existingCommands = CommandUtils.loadCommands();
+            instance.existingCommands = CommandLoader.loadCommands();
         }
         return instance;
     }

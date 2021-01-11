@@ -8,13 +8,14 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.alkon</groupId>
     <artifactId>weasellist-console</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <name>weasellist-console</name>
     <description>Simplified WeaselList console application</description>
-    <packaging>jar</packaging>
 
+    <packaging>jar</packaging>
     <properties>
         <java.version>1.8</java.version>
     </properties>

@@ -52,11 +52,6 @@ public class Move extends Command {
         return ReturnCode.CONTINUE;
     }
 
-    private void updateUser(User user) {
-        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
-        ApplicationContext.setParam(ApplicationContext.USER, user);
-    }
-
     private void move(final String itemName,
                       final String sourceListName, final String targetListName) {
         final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);

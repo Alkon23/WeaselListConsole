@@ -1,7 +1,6 @@
 package com.alkon.weasellistconsole.cli.commands;
 
-import com.alkon.weasellistconsole.application.ApplicationContext;
-import com.alkon.weasellistconsole.cli.CommandUtils;
+import com.alkon.weasellistconsole.cli.CommandLoader;
 import com.alkon.weasellistconsole.cli.ReturnCode;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class Help extends Command {
     }
 
     private void printSingle(String commandName) {
-        Command command = CommandUtils.getCommand(this.getCli().getExistingCommands(), commandName);
+        Command command = CommandLoader.getCommand(this.getCli().getExistingCommands(), commandName);
 
         if (command == null) {
             this.getCli().println(getMessage(COMMAND_NOT_FOUND, commandName));

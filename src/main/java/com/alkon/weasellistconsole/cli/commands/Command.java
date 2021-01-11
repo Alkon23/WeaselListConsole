@@ -1,5 +1,7 @@
 package com.alkon.weasellistconsole.cli.commands;
 
+import com.alkon.weasellistconsole.application.ApplicationContext;
+import com.alkon.weasellistconsole.application.model.User;
 import com.alkon.weasellistconsole.application.repo.MongoWrapper;
 import com.alkon.weasellistconsole.cli.CommandLineInterpreter;
 import com.alkon.weasellistconsole.cli.ReturnCode;
@@ -26,5 +28,10 @@ public abstract class Command {
      * @return A valid ReturnCode depending on the execution result
      */
     public abstract ReturnCode execute(final String input);
+
+    protected void updateUser(User user) {
+        user = ((MongoWrapper) ApplicationContext.getParam(ApplicationContext.MONGO_WRAPPER)).saveUser(user);
+        ApplicationContext.setParam(ApplicationContext.USER, user);
+    }
 
 }

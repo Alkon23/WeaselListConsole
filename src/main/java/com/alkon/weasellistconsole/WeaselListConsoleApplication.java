@@ -4,7 +4,7 @@ import com.alkon.weasellistconsole.application.ApplicationContext;
 import com.alkon.weasellistconsole.application.model.User;
 import com.alkon.weasellistconsole.application.repo.MongoWrapper;
 import com.alkon.weasellistconsole.cli.CommandLineInterpreter;
-import com.alkon.weasellistconsole.cli.CommandUtils;
+import com.alkon.weasellistconsole.cli.CommandLoader;
 import com.alkon.weasellistconsole.cli.ReturnCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -70,11 +70,11 @@ public class WeaselListConsoleApplication implements CommandLineRunner {
 
             switch (option) {
                 case "login":
-                    status = CommandUtils.getCommand(cli.getExistingCommands(), "login")
+                    status = CommandLoader.getCommand(cli.getExistingCommands(), "login")
                             .execute(null);
                     break;
                 case "register":
-                    status = CommandUtils.getCommand(cli.getExistingCommands(), "register")
+                    status = CommandLoader.getCommand(cli.getExistingCommands(), "register")
                             .execute(null);
                     if (status == ReturnCode.EXIT) {
                         option = null;

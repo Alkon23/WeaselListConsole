@@ -112,10 +112,10 @@ public final class Constants {
     // Mongo command
     public static final String PROPERTIES_NOT_FOUND = "Database connection not found. Please enter a new one:";
     public static final String ENTER_VALUES = "To create a new connection enter the following values or leave them empty for default values:";
-public static final String ENTER_HOST = "Host (default localhost): ";
-public static final String ENTER_PORT = "Port (default 27017): ";
-public static final String ENTER_DATABASE = "Database (default weaseldb): ";
-public static final String IS_CORRECT = "Is this connection uri correct? (y/n) ";
+    public static final String ENTER_HOST = "Host (default localhost): ";
+    public static final String ENTER_PORT = "Port (default 27017): ";
+    public static final String ENTER_DATABASE = "Database (default weaseldb): ";
+    public static final String IS_CORRECT = "Is this connection uri correct? (y/n) ";
 
     public static String getMessage(String template, Object... params) {
         return StringUtils.capitalize(String.format(template, params));
