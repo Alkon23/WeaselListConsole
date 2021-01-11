@@ -3,10 +3,11 @@ package com.alkon.weasellistconsole.cli;
 import com.alkon.weasellistconsole.cli.commands.*;
 import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class CommandUtils {
+public class CommandLoader {
 
     /**
      * Searches the given command in the given command list
@@ -30,20 +31,21 @@ public class CommandUtils {
      * @return A List containing all the available commands
      */
     public static List<Command> loadCommands() {
-        List<Command> commands = new ArrayList<>();
-        commands.add(new Exit());
-        commands.add(new Help());
-        commands.add(new Login());
-        commands.add(new Logout());
-        commands.add(new Register());
-        commands.add(new View());
-        commands.add(new Add());
-        commands.add(new Remove());
-        commands.add(new Edit());
-        commands.add(new Move());
-        commands.add(new Mongo());
-
-        return commands;
+        return Stream.of(
+                new Exit(),
+                new Help(),
+                new Login(),
+                new Logout(),
+                new Register(),
+                new View(),
+                new Add(),
+                new Remove(),
+                new Edit(),
+                new Move(),
+                new Mongo(),
+                new Archive(),
+                new Unarchive()
+        ).collect(Collectors.toList());
     }
 
 }

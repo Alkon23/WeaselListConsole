@@ -19,7 +19,8 @@ public class View extends Command {
     public View() {
         super("view", "Shows the list content as a table.\n\t " +
                 "If no list name specified it will show the list of available lists.\n\t" +
-                "If the name specified is 'tags' it will show the available tags.");
+                "If the name specified is 'tags' it will show the available tags.\n\t" +
+                "If the name specified is 'archived' it will show the archived lists");
     }
 
     @Override
@@ -27,9 +28,11 @@ public class View extends Command {
         final User user = (User) ApplicationContext.getParam(ApplicationContext.USER);
 
         if (isEmpty(input)) {
-            this.printLists(user.getItemLists());
+            this.printLists(user.getFilteredItemLists(false));
         } else if (input.equalsIgnoreCase("tags")) {
             this.printTags(user.getTags());
+        } else if (input.equalsIgnoreCase("archived")) {
+            this.printLists(user.getFilteredItemLists(true));
         } else {
             final ItemList list = user.getItemList(input);
             if (list == null) {
